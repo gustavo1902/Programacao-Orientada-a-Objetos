@@ -1,2 +1,1 @@
-#Programação Orientada a Objetos
-pg 68
+Programação Orientada a Objetos
