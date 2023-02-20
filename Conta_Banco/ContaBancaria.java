@@ -1,72 +1,89 @@
 package Conta_Banco;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class ContaBancaria {
-    private String nome;
-    private int numero;
+    private String nomeCliente;
+    private int numeroConta;
     private double saldo;
 
-    public ContaBancaria(String nome, int numero, double saldo){
-        this.nome = nome;
-        this.numero = numero;
+    public ContaBancaria(String nomeCliente, int numeroConta, double saldo) {
+        this.nomeCliente = nomeCliente;
+        this.numeroConta = numeroConta;
         this.saldo = saldo;
     }
 
-    public void imprimir(){
-        System.out.println("Nome: " + this.nome);
-        System.out.println("Número: " + this.numero);
-        System.out.println("Saldo: " + this.saldo);
-        System.out.println("\n");
-    }
-    
-    public void depositar(double valor){
-        this.saldo += valor;
-        //System.out.println("Depósito realizado com sucesso!");
+    public String getNomeCliente() {
+        return nomeCliente;
     }
 
-    public void sacar(double valor){
-        if (valor <= this.saldo) {
-            this.saldo -= valor;
-            //System.out.println("Operação realizada!");
-        } else {
-            //System.out.println("Saldo insuficiente para realizar a operação!");
-        }
-    }
-
-    public void transferir(ContaBancaria contaDestino, double valor) {
-        if (valor <= this.saldo) {
-            this.saldo -= valor;
-            contaDestino.depositar(valor);
-            //System.out.println("Transferência realizada com sucesso!");
-        } else {
-            //System.out.println("Saldo insuficiente para realizar a operação!");
-        }
-    }
-    
-    
-    
-
-    // getters e setters
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public int getNumeroConta() {
+        return numeroConta;
     }
 
     public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
+    public static ArrayList<ContaBancaria> lerArquivo(String nomeArquivo) throws IOException {
+        ArrayList<ContaBancaria> contas = new ArrayList<>();
+        BufferedReader leitor = new BufferedReader(new FileReader(nomeArquivo));
+        String linha = leitor.readLine();
+        while (linha != null) {
+            String[] campos = linha.split(",");
+            String nomeCliente = campos[0];
+            int numeroConta = Integer.parseInt(campos[1]);
+            double saldo = Double.parseDouble(campos[2]);
+            ContaBancaria conta = new ContaBancaria(nomeCliente, numeroConta, saldo);
+            contas.add(conta);
+            linha = leitor.readLine();
+        }
+        leitor.close();
+        return contas;
+    }
+
+    public static ContaBancaria selecionarConta(int numeroConta, ArrayList<ContaBancaria> contas) {
+        for (ContaBancaria conta : contas) {
+            if (conta.getNumeroConta() == numeroConta) {
+                return conta;
+            }
+        }
+        return null;
+    }
+
+    public static double consultarSaldo(int numeroConta, ArrayList<ContaBancaria> contas) {
+        ContaBancaria conta = selecionarConta(numeroConta, contas);
+        if (conta == null) {
+            return -1;
+        }
+        return conta.getSaldo();
+    }
+
+    public static boolean depositar(int numeroConta, double valor, ArrayList<ContaBancaria> contas) {
+        ContaBancaria conta = selecionarConta(numeroConta, contas);
+        if (conta == null) {
+            return false;
+        }
+        double saldoAtual = conta.getSaldo();
+        double novoSaldo = saldoAtual + valor;
+        conta.saldo = novoSaldo;
+        return true;
+    }
+
+    public static boolean sacar(int numeroConta, double valor, ArrayList<ContaBancaria> contas) {
+        ContaBancaria conta = selecionarConta(numeroConta, contas);
+        if (conta == null) {
+            return false;
+        }
+        double saldoAtual = conta.getSaldo();
+        if (valor > saldoAtual) {
+            return false;
+        }
+        double novoSaldo = saldoAtual - valor;
+        conta.saldo = novoSaldo;
+        return true;
     }
 }
