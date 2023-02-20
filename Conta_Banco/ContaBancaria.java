@@ -20,27 +20,28 @@ public class ContaBancaria {
     
     public void depositar(double valor){
         this.saldo += valor;
-        System.out.println("Depósito realizado com sucesso!");
+        //System.out.println("Depósito realizado com sucesso!");
     }
 
     public void sacar(double valor){
         if (valor <= this.saldo) {
             this.saldo -= valor;
-            System.out.println("Operação realizada!");
+            //System.out.println("Operação realizada!");
         } else {
-            System.out.println("Saldo insuficiente para realizar a operação!");
+            //System.out.println("Saldo insuficiente para realizar a operação!");
         }
     }
 
     public void transferir(ContaBancaria contaDestino, double valor) {
-        if (valor <= saldo) {
-            saldo -= valor;
+        if (valor <= this.saldo) {
+            this.saldo -= valor;
             contaDestino.depositar(valor);
-            System.out.println("Transferência realizada com sucesso!");
+            //System.out.println("Transferência realizada com sucesso!");
         } else {
-            System.out.println("Saldo insuficiente para realizar a transferência!");
+            //System.out.println("Saldo insuficiente para realizar a operação!");
         }
     }
+    
     
     
 
