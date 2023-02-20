@@ -66,7 +66,7 @@ public class OperacoesConta {
                     }
                     break;
                 case 4:
-                    System.out.print("Digite o número da conta: ");
+                    System.out.print("Digite o número da conta:");
                     numeroConta = leitor.nextInt();
                     realizarOperacao(numeroConta, contas);
                     break;
@@ -80,3 +80,5 @@ public class OperacoesConta {
         }
     }
 }
+
+
