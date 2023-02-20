@@ -7,88 +7,76 @@ import java.util.Scanner;
 public class OperacoesConta {
     public static void main(String[] args) throws IOException {
         Scanner leitor = new Scanner(System.in);
-        System.out.print("Digite o nome do arquivo de contas: ");
-        String nomeArquivo = leitor.nextLine();
+
+        // Lê o arquivo de contas previamente
+        String nomeArquivo = "input.txt";
         ArrayList<ContaBancaria> contas = ContaBancaria.lerArquivo(nomeArquivo);
 
+        ContaBancaria contaSelecionada = null;
+
+        realizarOperacao(123, contas);
+    }
+
+    public static void realizarOperacao(int numeroConta, ArrayList<ContaBancaria> contas) {
+        Scanner leitor = new Scanner(System.in);
+        double deposito = 0;
+        double saque = 0;
         int opcao = 0;
+
+        ContaBancaria contaSelecionada = ContaBancaria.selecionarConta(numeroConta, contas);
+
+        if (contaSelecionada == null) {
+            System.out.println("Conta não encontrada.");
+            return;
+        }
+
         while (opcao != 5) {
             System.out.println();
             System.out.println("Selecione uma opção:");
-            System.out.println("1 Selecionar conta");
-            System.out.println("2 - Consultar saldo");
-            System.out.println("3 - Depositar");
-            System.out.println("4 - Sacar");
+            System.out.println("1 - Consultar saldo");
+            System.out.println("2 - Realizar depósito");
+            System.out.println("3 - Realizar saque");
+            System.out.println("4 - Selecionar outra conta");
             System.out.println("5 - Sair");
-
             opcao = leitor.nextInt();
-            leitor.nextLine();
-      
+
             switch (opcao) {
                 case 1:
-                    System.out.print("Digite o número da conta: ");
-                    int numeroConta = leitor.nextInt();
-                    leitor.nextLine();
-                    ContaBancaria conta = ContaBancaria.selecionarConta(numeroConta, contas);
-                    if (conta == null) {
-                        System.out.println("Conta não encontrada.");
-                    } else {
-                        System.out.println("Conta selecionada: " + conta.getNomeCliente());
-                    }
-                    break;
-      
-                case 2:
-                    System.out.print("Digite o número da conta: ");
-                    numeroConta = leitor.nextInt();
-                    leitor.nextLine();
                     double saldo = ContaBancaria.consultarSaldo(numeroConta, contas);
-                    if (saldo == -1) {
-                        System.out.println("Conta não encontrada.");
-                    } else {
-                        System.out.println("Saldo da conta: " + saldo);
-                    }
+                    System.out.printf("Saldo: R$ %.2f%n", saldo);
                     break;
-      
-                case 3:
-                    System.out.print("Digite o número da conta: ");
-                    numeroConta = leitor.nextInt();
-                    leitor.nextLine();
-                    System.out.print("Digite o valor a depositar: ");
-                    double valorDeposito = leitor.nextDouble();
-                    leitor.nextLine();
-                    boolean sucessoDeposito = ContaBancaria.depositar(numeroConta, valorDeposito, contas);
-                    if (sucessoDeposito) {
+                case 2:
+                    System.out.print("Digite o valor a ser depositado: ");
+                    deposito = leitor.nextDouble();
+                    boolean depositoRealizado = contaSelecionada.depositar(deposito, contas);
+                    if (depositoRealizado) {
                         System.out.println("Depósito realizado com sucesso.");
                     } else {
-                        System.out.println("Conta não encontrada.");
+                        System.out.println("Erro ao realizar depósito.");
                     }
                     break;
-      
+                case 3:
+                    System.out.print("Digite o valor a ser sacado: ");
+                    saque = leitor.nextDouble();
+                    boolean saqueRealizado = contaSelecionada.sacar(saque, contas);
+                    if (saqueRealizado) {
+                        System.out.println("Saque realizado com sucesso.");
+                    } else {
+                        System.out.println("Erro ao realizar saque.");
+                    }
+                    break;
                 case 4:
                     System.out.print("Digite o número da conta: ");
                     numeroConta = leitor.nextInt();
-                    leitor.nextLine();
-                    System.out.print("Digite o valor a sacar: ");
-                    double valorSaque = leitor.nextDouble();
-                    leitor.nextLine();
-                    boolean sucessoSaque = ContaBancaria.sacar(numeroConta, valorSaque, contas);
-                    if (sucessoSaque) {
-                        System.out.println("Saque realizado com sucesso.");
-                    } else {
-                        System.out.println("Conta não encontrada ou saldo insuficiente.");
-                    }
+                    realizarOperacao(numeroConta, contas);
                     break;
-      
                 case 5:
-                    System.out.println("Saindo...");
+                    System.out.println("Encerrando operação.");
                     break;
-      
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opção inválida. Tente novamente.");
                     break;
             }
         }
-      
-        leitor.close();
     }
 }
