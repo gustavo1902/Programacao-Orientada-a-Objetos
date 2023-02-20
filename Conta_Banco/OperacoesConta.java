@@ -9,7 +9,7 @@ public class OperacoesConta {
         Scanner leitor = new Scanner(System.in);
 
         // Lê o arquivo de contas previamente
-        String nomeArquivo = "input.txt";
+        String nomeArquivo = "./input.txt";
         ArrayList<ContaBancaria> contas = ContaBancaria.lerArquivo(nomeArquivo);
 
         ContaBancaria contaSelecionada = null;
