@@ -31,6 +31,17 @@ public class ContaBancaria {
             System.out.println("Saldo insuficiente para realizar a operação!");
         }
     }
+
+    public void transferir(ContaBancaria contaDestino, double valor) {
+        if (valor <= saldo) {
+            saldo -= valor;
+            contaDestino.depositar(valor);
+            System.out.println("Transferência realizada com sucesso!");
+        } else {
+            System.out.println("Saldo insuficiente para realizar a transferência!");
+        }
+    }
+    
     
 
     // getters e setters

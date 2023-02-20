@@ -39,6 +39,7 @@ public class OperacoesConta {
         System.out.println("\nSelecione a operação:");
         System.out.println("1 - Depositar");
         System.out.println("2 - Sacar");
+        System.out.println("3 - Transferir");
         System.out.print("Opção selecionada: ");
         int operacao = scanner.nextInt();
         
@@ -52,8 +53,30 @@ public class OperacoesConta {
             double valor = scanner.nextDouble();
             contaSelecionada.sacar(valor);
             System.out.println("Novo saldo: " + contaSelecionada.getSaldo());
+        } else if (operacao == 3) {
+            System.out.print("Número da conta de destino: ");
+            int numeroDestino = scanner.nextInt();
+            System.out.print("Valor a transferir: ");
+            double valor = scanner.nextDouble();
+            ContaBancaria contaDestino = null;
+            if (contaSelecionada.getNumero() == numeroDestino) {
+                System.out.println("Não é possível transferir para a mesma conta!");
+                return;
+            } else if (contaSelecionada.getSaldo() < valor) {
+                System.out.println("Saldo insuficiente!");
+                return;
+            } else if (contaSelecionada.getNumero() == conta1.getNumero()) {
+                contaDestino = conta2;
+            } else if (contaSelecionada.getNumero() == conta2.getNumero()) {
+                contaDestino = conta1;
+            } else {
+                System.out.println("Conta de destino não encontrada!");
+                return;
+            }
+            contaSelecionada.transferir(contaDestino, valor);
+            System.out.println("Transferência realizada com sucesso!");
         } else {
             System.out.println("Opção inválida!");
-        }        
+        }              
     }
 }
